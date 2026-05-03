@@ -1,5 +1,5 @@
 # Incident Management System (IMS)
-> Zeotap Infrastructure / SRE Intern Assignment — Sunil K
+> Zeotap Infrastructure / SRE Intern Assignment
 
 A production-grade, mission-critical Incident Management System inspired by how **PagerDuty** and **Datadog** handle real-world incidents at scale. Built with Java 17 + Spring Boot 3.5, React, PostgreSQL, MongoDB, and Redis.
 
