@@ -520,29 +520,6 @@ incident-management-system/
 
 ---
 
-## Bonus Features
-
-- Batch signal ingestion endpoint (`POST /api/signals/batch`)
-- Stress test script for load testing
-- Realistic cascade failure simulation (RDBMS -> API -> MCP)
-- Dark themed responsive UI inspired by real SRE dashboards
-- MTTR displayed in human readable format
-- Auto-polling dashboard (every 5 seconds)
-- Detailed `/health` endpoint with buffer metrics
-- All 6 component types from assignment implemented
-- All 8 signal types implemented
-- Structured RCA categories (not free text)
-
----
-
-## GitHub Repository
-
-**https://github.com/sunila-k05/incident-management-system**
-
-*Built by Sunil K for Zeotap Infrastructure / SRE Intern Assignment*
-
----
-
 ## Docker Networking — How Frontend Reaches Backend
 
 When running inside Docker Compose, containers communicate by **service name**, not `localhost`.
@@ -559,19 +536,25 @@ location /api {
     proxy_pass http://backend:8080/api;
 }
 ```
+## Features
+
+- Batch signal ingestion endpoint (`POST /api/signals/batch`)
+- Stress test script for load testing
+- Realistic cascade failure simulation (RDBMS -> API -> MCP)
+- Dark themed responsive UI inspired by real SRE dashboards
+- MTTR displayed in human readable format
+- Auto-polling dashboard (every 5 seconds)
+- Detailed `/health` endpoint with buffer metrics
+- All 6 component types from assignment implemented
+- All 8 signal types implemented
+- Structured RCA categories (not free text)
 
 All API calls use relative URLs (`/api`) — no hardcoded `localhost`. This means the system works identically in Docker and in local development.
 
----
+## GitHub Repository
 
-## Non-Functional Improvements (Bonus)
+**https://github.com/sunila-k05/incident-management-system**
 
-- **Rate Limiting** — Bucket4j token bucket on ingestion API (HTTP 429 on breach)
-- **Backpressure** — ArrayBlockingQueue decouples ingestion from DB writes
-- **Retry Logic** — Spring Retry with exponential backoff on all DB writes
-- **CORS** — Configured on all controllers for cross-origin dashboard access
-- **Health Check** — Custom /health endpoint with per-service status
-- **Observability** — Throughput metrics logged every 5 seconds
-- **Docker Multi-stage builds** — Smaller production images (Maven build + JRE only)
-- **Nginx Reverse Proxy** — Production-grade static file serving + API routing
-- **Structured Logging** — SLF4J with contextual incident IDs on all transitions
+*Built by Sunil K for Zeotap Infrastructure / SRE Intern Assignment*
+
+
