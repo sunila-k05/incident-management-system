@@ -540,3 +540,38 @@ incident-management-system/
 **https://github.com/sunila-k05/incident-management-system**
 
 *Built by Sunil K for Zeotap Infrastructure / SRE Intern Assignment*
+
+---
+
+## Docker Networking — How Frontend Reaches Backend
+
+When running inside Docker Compose, containers communicate by **service name**, not `localhost`.
+
+The frontend uses Nginx as a reverse proxy:
+Browser → localhost:3000/api/incidents
+→ Nginx (frontend container)
+→ http://backend:8080/api/incidents
+→ Spring Boot (backend container)
+→ Response returned to browser
+This is configured in `frontend/nginx.conf`:
+```nginx
+location /api {
+    proxy_pass http://backend:8080/api;
+}
+```
+
+All API calls use relative URLs (`/api`) — no hardcoded `localhost`. This means the system works identically in Docker and in local development.
+
+---
+
+## Non-Functional Improvements (Bonus)
+
+- **Rate Limiting** — Bucket4j token bucket on ingestion API (HTTP 429 on breach)
+- **Backpressure** — ArrayBlockingQueue decouples ingestion from DB writes
+- **Retry Logic** — Spring Retry with exponential backoff on all DB writes
+- **CORS** — Configured on all controllers for cross-origin dashboard access
+- **Health Check** — Custom /health endpoint with per-service status
+- **Observability** — Throughput metrics logged every 5 seconds
+- **Docker Multi-stage builds** — Smaller production images (Maven build + JRE only)
+- **Nginx Reverse Proxy** — Production-grade static file serving + API routing
+- **Structured Logging** — SLF4J with contextual incident IDs on all transitions
