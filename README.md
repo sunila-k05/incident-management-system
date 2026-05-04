@@ -555,6 +555,6 @@ All API calls use relative URLs (`/api`) — no hardcoded `localhost`. This mean
 
 **https://github.com/sunila-k05/incident-management-system**
 
-*Built by Sunil K for Zeotap Infrastructure / SRE Intern Assignment*
+*Built by Sunila K for Zeotap Infrastructure / SRE Intern Assignment*
 
 
