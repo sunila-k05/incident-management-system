@@ -1,5 +1,5 @@
 # Incident Management System (IMS)
-> Zeotap Infrastructure / SRE Intern Assignment
+>SRE Intern Assignment
 
 A production-grade, mission-critical Incident Management System inspired by how **PagerDuty** and **Datadog** handle real-world incidents at scale. Built with Java 17 + Spring Boot 3.5, React, PostgreSQL, MongoDB, and Redis.
 
@@ -44,10 +44,10 @@ This system solves that by:
 |                                                                  |
 |   POST /api/signals           POST /api/signals/batch            |
 |         |                              |                         |
-|         +--------------+--------------+                         |
+|         +--------------+--------------+                          |
 |                        |                                         |
-|           +------------v------------+                           |
-|           |     Rate Limiter        |  Bucket4j Token Bucket    |
+|           +------------v------------+                            |
+|           |     Rate Limiter        |  Bucket4j Token Bucket     |
 |           |     10,000 req/sec      |  Returns HTTP 429 if exceeded |
 |           +------------+------------+                           |
 +------------------------|-----------------------------------------+
@@ -57,16 +57,16 @@ This system solves that by:
 |                                                                  |
 |          ArrayBlockingQueue (capacity: 10,000)                   |
 |                                                                  |
-|   offer() is non-blocking — returns false if full               |
+|   offer() is non-blocking — returns false if full                |
 |   API thread NEVER waits — system never freezes                  |
 |                                                                  |
-|   Background worker drains 500 signals every 100ms              |
+|   Background worker drains 500 signals every 100ms               |
 +------------------------+-----------------------------------------+
                          |
 +------------------------v-----------------------------------------+
 |                  DEBOUNCE ENGINE                                 |
 |                                                                  |
-|   ConcurrentHashMap<componentId, DebounceWindow>                |
+|   ConcurrentHashMap<componentId, DebounceWindow>                 |
 |                                                                  |
 |   If window active (under 10s):                                  |
 |     Link signal to existing Work Item                            |
@@ -78,7 +78,7 @@ This system solves that by:
     |  Strategy   |    |         State Machine                  |
     |  Pattern    |    |                                        |
     |             |    |  OPEN -> INVESTIGATING                 |
-    |  RDBMS -> P0|    |       -> RESOLVED -> CLOSED           |
+    |  RDBMS -> P0|    |       -> RESOLVED -> CLOSED            |
     |  API_GW -> P0    |                                        |
     |  MCP -> P1  |    |  Invalid transitions throw             |
     |  QUEUE -> P1|    |  IllegalStateException                 |
@@ -89,15 +89,15 @@ This system solves that by:
 +----------v-----------------------------------------------------------+
 |                        STORAGE LAYER                                 |
 |                                                                      |
-|  +------------+  +--------------+  +----------+  +--------------+   |
-|  |  MongoDB   |  |  PostgreSQL  |  |  Redis   |  |  PG Table   |   |
-|  |            |  |              |  |          |  |             |   |
-|  | Raw Signals|  |  Work Items  |  |Dashboard |  | Timeseries  |   |
-|  | Audit Log  |  |  RCA Records |  |  Cache   |  |  MTTR       |   |
-|  |            |  |              |  |          |  |  Metrics    |   |
-|  | schema-free|  | ACID txns    |  | sub-ms   |  |             |   |
-|  | high volume|  | transactional|  | reads    |  |             |   |
-|  +------------+  +--------------+  +----------+  +--------------+   |
+|  +------------+  +--------------+  +----------+  +--------------+    |
+|  |  MongoDB   |  |  PostgreSQL  |  |  Redis   |  |  PG Table   |     |
+|  |            |  |              |  |          |  |             |     |
+|  | Raw Signals|  |  Work Items  |  |Dashboard |  | Timeseries  |     |
+|  | Audit Log  |  |  RCA Records |  |  Cache   |  |  MTTR       |     |
+|  |            |  |              |  |          |  |  Metrics    |     |
+|  | schema-free|  | ACID txns    |  | sub-ms   |  |             |     |
+|  | high volume|  | transactional|  | reads    |  |             |     |
+|  +------------+  +--------------+  +----------+  +--------------+    |
 +----------------------------------------------------------------------+
                             |
 +---------------------------v------------------------------------------+
@@ -112,11 +112,11 @@ This system solves that by:
 +---------------------------v------------------------------------------+
 |                  REACT DASHBOARD (port 3000)                         |
 |                                                                      |
-|  Live Feed         Active incidents sorted by P0 to P2              |
+|  Live Feed         Active incidents sorted by P0 to P2               |
 |  Incident Detail   Raw signals from MongoDB + state buttons          |
 |  RCA Form          Structured form with all required fields          |
 |                                                                      |
-|  Auto-polls every 5 seconds for live updates                        |
+|  Auto-polls every 5 seconds for live updates                         |
 +----------------------------------------------------------------------+
 ```
 
