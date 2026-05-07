@@ -10,17 +10,28 @@ pipeline {
             }
         }
 
+        stage('Verify Environment') {
+            steps {
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'node -v'
+                sh 'npm -v'
+                sh 'docker --version'
+                sh 'docker-compose --version'
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                 sh 'mvn clean package -DskipTests'               
-               }
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Build Frontend') {
             steps {
-                dir('Frontend') {
+                dir('frontend') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
@@ -29,18 +40,18 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker compose build'
+                sh 'docker-compose build'
             }
         }
 
         stage('Deploy Containers') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
             }
         }
 
-        stage('Verify') {
+        stage('Verify Running Containers') {
             steps {
                 sh 'docker ps'
             }
@@ -48,6 +59,7 @@ pipeline {
     }
 
     post {
+
         success {
             echo 'Pipeline executed successfully!'
         }
