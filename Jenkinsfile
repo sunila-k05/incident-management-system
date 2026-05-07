@@ -12,10 +12,9 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('Backend') {
-                    sh 'chmod +x mvnw || true'
-                    sh './mvnw clean package -DskipTests || mvn clean package -DskipTests'
-                }
+                dir('backend') {
+                 sh 'mvn clean package -DskipTests'               
+               }
             }
         }
 
