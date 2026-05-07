@@ -1,16 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        BACKEND_IMAGE = "incident-management-system_backend"
-        FRONTEND_IMAGE = "incident-management-system_frontend"
-    }
-
-    tools {
-        maven 'maven'
-        nodejs 'nodejs'
-    }
-
     stages {
 
         stage('Clone Repository') {
@@ -22,22 +12,23 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('backend') {
-                    sh 'mvn clean package -DskipTests'
+                dir('Backend') {
+                    sh 'chmod +x mvnw || true'
+                    sh './mvnw clean package -DskipTests || mvn clean package -DskipTests'
                 }
             }
         }
 
         stage('Build Frontend') {
             steps {
-                dir('frontend') {
+                dir('Frontend') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Docker Build') {
             steps {
                 sh 'docker compose build'
             }
@@ -50,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Verify Running Containers') {
+        stage('Verify') {
             steps {
                 sh 'docker ps'
             }
@@ -58,7 +49,6 @@ pipeline {
     }
 
     post {
-
         success {
             echo 'Pipeline executed successfully!'
         }
